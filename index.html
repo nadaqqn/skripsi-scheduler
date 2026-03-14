@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="id" class="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skripsi Scheduler</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
+  <!-- Flaticon UIcons -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
+</head>
+
+<body class="
+  bg-gradient-to-br from-teal-50 via-white to-teal-100
+  dark:bg-none dark:bg-gray-900
+  min-h-screen font-sans transition-colors duration-300
+">
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- 🧩 HEADER -->
+    <div class="flex justify-between items-start mb-8">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+          Skripsi Scheduler
+        </h1>
+        <p id="todayDate" class="text-sm text-gray-500 dark:text-gray-400">
+        </p>
+      </div>
+
+      <!-- RIGHT SIDE BUTTONS -->
+      <div class="flex items-center gap-3">
+
+        <!-- 🌙 DARK MODE TOGGLE -->
+        <button id="themeToggle"
+          class="bg-gray-100 dark:bg-gray-700 p-2 rounded-full text-lg transition">
+          <i class="fi fi-br-moon-stars text-gray-600 dark:text-white"></i>
+        </button>
+
+
+      </div>
+    </div>
+
+  <!-- PROFIL CARD -->
+  <div class="w-full max-w-4xl bg-gradient-to-b from-teal-400 to-emerald-500 
+              rounded-2xl shadow-2xl text-white p-6 relative">
+
+    <!-- ICON ATAS -->
+    <div class="flex justify-center -mt-14">
+      <div id="iconToggle" class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md 
+                  flex items-center justify-center text-3xl shadow-lg border border-white/30">
+        <i class="fi fi-br-graduation-cap"></i>
+      </div>
+    </div>
+
+    <!-- TITLE -->
+    <div class="text-center mb-6 relative">
+
+      <h1 class="text-lg font-semibold">Profil Mahasiswa Skripsi</h1>
+      <p class="text-xs opacity-80">Kartu Bimbingan Digital</p>
+
+      <!-- ✏ EDIT BUTTON -->
+      <button id="openProfileModal"
+        class="absolute right-0 top-0 text-xs px-3 py-1 rounded-full 
+              bg-white/20 backdrop-blur-md hover:bg-white/30 transition">
+          <i class="fi fi-br-pencil text-white dark:text-white"></i>
+      </button>
+
+    </div>
+
+    <!-- INFO LIST -->
+     <div class="relative">
+      <!-- 🔘 TOGGLE BUTTON -->
+      <button id="toggleDetail"
+        class="absolute -bottom-5 left-1/2 -translate-x-1/2 z-30
+          
+                
+              flex items-center justify-center
+              text-sm font-medium
+              shadow-lg
+              hover:bg-white/30 transition">
+        <i class="fi fi-br-chevron-double-down"></i>
+      </button>
+  <!-- 📄 DETAIL SECTION -->
+  <div id="detailSection"
+    class="overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-in-out">
+    <div class="text-sm mt-6">
+
+      <!-- DATA DIRI -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-5 w-full">
+
+        <div class="border-b border-white/20 pb-3">
+          <p class="text-xs opacity-70">NAMA</p>
+          <p id="namaValue" class="font-medium">Belum diisi</p>
+        </div>
+
+        <div class="border-b border-white/20 pb-3 md:text-right">
+          <p class="text-xs opacity-70">PROGRAM STUDI</p>
+          <p id="prodiValue" class="font-medium">Belum diisi</p>
+        </div>
+
+        <div class="border-b border-white/20 pb-3">
+          <p class="text-xs opacity-70">NIM</p>
+          <p id="nimValue" class="font-medium">Belum diisi</p>
+        </div>
+
+        <div class="border-b border-white/20 pb-3 md:text-right">
+          <p class="text-xs opacity-70">UNIVERSITAS</p>
+          <p id="universitasValue" class="font-medium">Belum diisi</p>
+        </div>
+
+      </div>
+      <!-- DATA SKRIPSI -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-5 w-full">
+
+        <div class="border-b border-white/20 pb-3">
+          <p class="text-xs opacity-70">JUDUL SKRIPSI</p>
+          <p id="judulValue" class="font-medium">Belum diisi</p>
+        </div>
+
+        <div class="border-b border-white/20 pb-3 md:text-right">
+          <p class="text-xs opacity-70">DOSEN PEMBIMBING 1</p>
+          <p id="dospem1Value" class="font-medium">Belum diisi</p>
+        </div>
+
+        <div class="border-b border-white/20 pb-3">
+          <p class="text-xs opacity-70">TARGET LULUS</p>
+          <p id="targetValue" class="font-medium">Belum diisi</p>
+        </div>
+
+        <div class="border-b border-white/20 pb-3 md:text-right">
+          <p class="text-xs opacity-70">DOSEN PEMBIMBING 2</p>
+          <p id="dospem2Value" class="font-medium">Belum diisi</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- COUNTDOWN SECTION -->
+    <div class="text-center">
+      <p class="text-xs opacity-80 mb-3 tracking-wide">
+        <i class="fi fi-br-hourglass-end "></i> COUNTDOWN MENUJU TARGET LULUS
+      </p>
+
+      <div class="grid grid-cols-4 gap-2">
+
+        <div class="bg-white/20 backdrop-blur-md rounded-lg p-2">
+          <p class="text-lg font-bold">00</p>
+          <p class="text-[10px] opacity-80">HARI</p>
+        </div>
+
+        <div class="bg-white/20 backdrop-blur-md rounded-lg p-2">
+          <p class="text-lg font-bold">00</p>
+          <p class="text-[10px] opacity-80">JAM</p>
+        </div>
+
+        <div class="bg-white/20 backdrop-blur-md rounded-lg p-2">
+          <p class="text-lg font-bold">00</p>
+          <p class="text-[10px] opacity-80">MENIT</p>
+        </div>
+
+        <div class="bg-white/20 backdrop-blur-md rounded-lg p-2">
+          <p class="text-lg font-bold">00</p>
+          <p class="text-[10px] opacity-80">DETIK</p>
+        </div>
+
+      </div>
+    </div>
+
+      </div>
+    </div>
+  </div>
+
+    <!-- 🧩 DAFTAR BIMBINGAN -->
+    <div class="mt-6 mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
+            <i class="fi fi-br-book-alt text-gray-600 dark:text-white"></i> Daftar Bimbingan
+        </h2>
+
+        <button id="sortToggle"
+            class="text-gray-600 dark:text-gray-300 hover:text-teal-500 transition text-lg">
+            <i class="fi fi-br-arrow-up text-gray-600 dark:text-white"></i>
+        </button>
+        </div>
+
+      <div id="bimbinganList" class="space-y-4">
+
+      </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ☕ SUPPORT CREATOR -->
+<div class="mt-10 bg-white dark:bg-gray-800 rounded-2xl shadow p-6 text-center">
+
+  <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+    ☕ Support Creator
+  </h3>
+
+  <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+    Kalau <b>Skripsi Scheduler</b> ngebantu proses skripsimu, kamu bisa kasih dukungan buat support pengembangan aplikasi ini.
+  </p>
+
+  <a class="mayar-button iframe-lightbox-link bg-teal-500 text-white px-4 py-2 rounded-xl hover:bg-teal-600 transition"
+     href="https://skripsischeduler.myr.id/pl/skripsi-scheduler?iframe=true"
+     data-padding-bottom="30%"
+     data-scrolling="true">
+     Dukung Sekarang
+  </a>
+
+</div>
+
+  <!-- 🧩 FAB -->
+  <button id="openModal" class="fixed bottom-6 right-6 bg-orange-500 hover:bg-orange-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition">
+    +
+  </button>
+
+    <!-- 🧩 MODAL TAMBAH / EDIT BIMBINGAN -->
+    <div id="bimbinganModal"
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 px-4">
+
+    <div
+        class="bg-white dark:bg-gray-800 w-full max-w-md rounded-2xl shadow-xl p-6 relative animate-fadeIn">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
+            Tambah Bimbingan
+        </h2>
+        <button id="closeModal"
+            class="text-gray-500 hover:text-gray-800 dark:hover:text-white text-xl">
+            ✕
+        </button>
+        </div>
+
+        <!-- Form -->
+        <form id="bimbinganForm" class="space-y-4">
+
+        <!-- Tanggal -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Tanggal
+            </label>
+            <input id="tanggal" type="date"
+            class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+            bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-teal-400 outline-none">
+        </div>
+
+        <!-- Topik -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Topik
+            </label>
+            <input id="topik" type="text" placeholder="Topik bimbingan..."
+            class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+            bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-teal-400 outline-none">
+        </div>
+
+        <!-- Dosen -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Dosen Pembimbing
+            </label>
+            <input id="dosen" type="text" placeholder="Nama dosen..."
+            class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+            bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-teal-400 outline-none">
+        </div>
+
+        <!-- Status -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Status
+            </label>
+            <select
+            id="status" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+            bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-teal-400 outline-none">
+            <option value="Belum">Belum</option>
+            <option value="Selesai">Selesai</option>
+            </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-end gap-3 pt-4">
+            <button type="button" id="cancelBtn"
+            class="px-4 py-2 rounded-xl bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white hover:opacity-80 transition">
+            Batal
+            </button>
+
+            <button type="submit"
+            class="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white transition">
+            Simpan
+            </button>
+        </div>
+
+        </form>
+
+    </div>
+    </div>
+<!--  MODAL EDIT PROFIL -->
+<div id="profileModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 px-4">
+
+  <div
+    class="bg-white dark:bg-gray-800 w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl p-6 sm:p-6 animate-fadeIn">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6 sticky top-0 bg-white dark:bg-gray-800 z-10 pt-2 pb-4">
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
+        Edit Profil
+      </h2>
+      <button id="closeProfileModal"
+        class="text-gray-500 hover:text-gray-800 dark:hover:text-white text-xl">
+        ✕
+      </button>
+    </div>
+
+    <!-- Form -->
+    <form id="profileForm" class="space-y-4">
+
+      <!-- Nama -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Nama
+        </label>
+        <input id="inputNama" type="text" placeholder="Nama lengkap"
+          class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+          bg-white dark:bg-gray-700 text-gray-800 dark:text-white 
+          focus:ring-2 focus:ring-teal-400 outline-none">
+      </div>
+
+      <!-- Prodi -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Program Studi
+        </label>
+        <input id="inputProdi" type="text" placeholder="Contoh: Teknik Informatika"
+          class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+          bg-white dark:bg-gray-700 text-gray-800 dark:text-white 
+          focus:ring-2 focus:ring-teal-400 outline-none">
+      </div>
+
+      <!-- NIM -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          NIM
+        </label>
+        <input id="inputNim" type="text" placeholder="Nomor Induk Mahasiswa"
+          class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+          bg-white dark:bg-gray-700 text-gray-800 dark:text-white 
+          focus:ring-2 focus:ring-teal-400 outline-none">
+      </div>
+
+      <!-- Universitas -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Universitas
+        </label>
+        <input id="inputUniversitas" type="text" placeholder="Nama Universitas"
+          class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+          bg-white dark:bg-gray-700 text-gray-800 dark:text-white 
+          focus:ring-2 focus:ring-teal-400 outline-none">
+      </div>
+
+      <!-- Judul Skripsi -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Judul Skripsi
+        </label>
+        <textarea id="inputJudul" placeholder="Judul skripsi Anda"
+          class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+          bg-white dark:bg-gray-700 text-gray-800 dark:text-white 
+          focus:ring-2 focus:ring-teal-400 outline-none resize-none"></textarea>
+      </div>
+
+      <!-- Dospem 1 -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Dosen Pembimbing 1
+        </label>
+        <input id="inputDospem1" type="text" placeholder="Nama dosen pembimbing 1"
+          class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+          bg-white dark:bg-gray-700 text-gray-800 dark:text-white 
+          focus:ring-2 focus:ring-teal-400 outline-none">
+      </div>
+
+      <!-- Dospem 2 -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Dosen Pembimbing 2
+        </label>
+        <input id="inputDospem2" type="text" placeholder="Nama dosen pembimbing 2"
+          class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+          bg-white dark:bg-gray-700 text-gray-800 dark:text-white 
+          focus:ring-2 focus:ring-teal-400 outline-none">
+      </div>
+
+      <!-- Target Lulus -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Target Lulus
+        </label>
+        <input id="inputTarget" type="date"
+          class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 
+          bg-white dark:bg-gray-700 text-gray-800 dark:text-white 
+          focus:ring-2 focus:ring-teal-400 outline-none">
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-end gap-3 pt-4 pb-6">
+        <button type="button" id="cancelProfileBtn"
+          class="px-4 py-2 rounded-xl bg-gray-200 dark:bg-gray-600 
+          text-gray-800 dark:text-white hover:opacity-80 transition">
+          Batal
+        </button>
+
+        <button type="submit"
+          class="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white transition">
+          Simpan
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
+    
+    
+
+  <!-- 🌙 DARK MODE SCRIPT -->
+  <script>
+    // Tanggal hari ini
+    const todayDate = document.getElementById("todayDate");
+
+    function updateTodayDate() {
+    const now = new Date();
+
+    const options = {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    };
+
+    const formattedDate = now.toLocaleDateString("id-ID", options);
+
+    todayDate.textContent = formattedDate;
+    }
+
+    // Jalankan pertama kali
+    updateTodayDate();
+
+    // Update setiap 1 menit (antisipasi lewat tengah malam)
+    setInterval(updateTodayDate, 60000);
+
+    // Sorting Daftar Bimbingan
+    const sortToggle = document.getElementById("sortToggle");
+
+    // true = ascending
+    // false = descending
+    let isAscending = true;
+
+    //Toggle Button Dark Mode
+    const toggleBtn = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      html.classList.add('dark');
+      toggleBtn.innerHTML = '<i class="fi fi-br-brightness text-gray-600 dark:text-white"></i>';
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      html.classList.toggle('dark');
+
+      if (html.classList.contains('dark')) {
+        localStorage.setItem('theme', 'dark');
+        toggleBtn.innerHTML = '<i class="fi fi-br-brightness text-gray-600 dark:text-white"></i>';
+      } else {
+        localStorage.setItem('theme', 'light');
+        toggleBtn.innerHTML = '<i class="fi fi-br-moon-stars text-gray-600 dark:text-white"></i>';
+      }
+    });
+
+    // Modal Script
+     const modal = document.getElementById("bimbinganModal");
+    const openModal = document.getElementById("openModal");
+    const closeModal = document.getElementById("closeModal");
+    const cancelBtn = document.getElementById("cancelBtn");
+
+    openModal.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+    });
+
+    function closeModalFunction() {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+    }
+
+    closeModal.addEventListener("click", closeModalFunction);
+    cancelBtn.addEventListener("click", closeModalFunction);
+
+    // Close modal when click outside
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+        closeModalFunction();
+        }
+    });
+
+
+    // PROFIL MODAL
+    const profileModal = document.getElementById("profileModal");
+      const openProfileModal = document.getElementById("openProfileModal");
+      const closeProfileModal = document.getElementById("closeProfileModal");
+      const cancelProfileBtn = document.getElementById("cancelProfileBtn");
+      const profileForm = document.getElementById("profileForm");
+
+      // Buka modal dan load data
+      openProfileModal.addEventListener("click", () => {
+        profileModal.classList.remove("hidden");
+        profileModal.classList.add("flex");
+
+        const savedData = JSON.parse(localStorage.getItem("profileSkripsi")) || {};
+        document.getElementById("inputNama").value = savedData.nama || "";
+        document.getElementById("inputProdi").value = savedData.prodi || "";
+        document.getElementById("inputNim").value = savedData.nim || "";
+        document.getElementById("inputUniversitas").value = savedData.universitas || "";
+        document.getElementById("inputJudul").value = savedData.judul || "";
+        document.getElementById("inputDospem1").value = savedData.dospem1 || "";
+        document.getElementById("inputDospem2").value = savedData.dospem2 || "";
+        document.getElementById("inputTarget").value = savedData.targetLulus || "";
+      });
+
+      function closeProfileModalFunction() {
+        profileModal.classList.add("hidden");
+        profileModal.classList.remove("flex");
+      }
+
+      closeProfileModal.addEventListener("click", closeProfileModalFunction);
+      cancelProfileBtn.addEventListener("click", closeProfileModalFunction);
+
+      // Simpan data dan update DOM tanpa reload
+      profileForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const profileData = {
+          nama: document.getElementById("inputNama").value,
+          prodi: document.getElementById("inputProdi").value,
+          nim: document.getElementById("inputNim").value,
+          universitas: document.getElementById("inputUniversitas").value,
+          judul: document.getElementById("inputJudul").value,
+          dospem1: document.getElementById("inputDospem1").value,
+          dospem2: document.getElementById("inputDospem2").value,
+          targetLulus: document.getElementById("inputTarget").value
+        };
+
+        localStorage.setItem("profileSkripsi", JSON.stringify(profileData));
+
+        // update DOM
+        document.getElementById("namaValue").textContent = profileData.nama || "Belum diisi";
+        document.getElementById("prodiValue").textContent = profileData.prodi || "Belum diisi";
+        document.getElementById("nimValue").textContent = profileData.nim || "Belum diisi";
+        document.getElementById("universitasValue").textContent = profileData.universitas || "Belum diisi";
+        document.getElementById("judulValue").textContent = profileData.judul || "Belum diisi";
+        document.getElementById("dospem1Value").textContent = profileData.dospem1 || "Belum diisi";
+        document.getElementById("dospem2Value").textContent = profileData.dospem2 || "Belum diisi";
+        document.getElementById("targetValue").textContent = profileData.targetLulus || "Belum diisi";
+
+        closeProfileModalFunction();
+      });
+
+    
+
+    // DETAIL TOGGLE BUTTON
+    const detailToggleBtn = document.getElementById("toggleDetail");
+    const iconToggle = document.getElementById("iconToggle");
+    const detailSection = document.getElementById("detailSection");
+
+    let isOpen = false;
+
+    function toggleDetail() {
+      if (!isOpen) {
+        detailSection.classList.remove("max-h-0", "opacity-0");
+        detailSection.classList.add("max-h-[1000px]", "opacity-100");
+      } else {
+        detailSection.classList.remove("max-h-[1000px]", "opacity-100");
+        detailSection.classList.add("max-h-0", "opacity-0");
+      }
+
+      isOpen = !isOpen;
+    }
+
+    detailToggleBtn.addEventListener("click", toggleDetail);
+    iconToggle.addEventListener("click", toggleDetail);
+
+    function loadProfile() {
+      const savedData = JSON.parse(localStorage.getItem("profileSkripsi")) || {};
+
+      document.getElementById("namaValue").textContent = savedData.nama || "Belum diisi";
+      document.getElementById("prodiValue").textContent = savedData.prodi || "Belum diisi";
+      document.getElementById("nimValue").textContent = savedData.nim || "Belum diisi";
+      document.getElementById("universitasValue").textContent = savedData.universitas || "Belum diisi";
+      document.getElementById("judulValue").textContent = savedData.judul || "Belum diisi";
+      document.getElementById("dospem1Value").textContent = savedData.dospem1 || "Belum diisi";
+      document.getElementById("dospem2Value").textContent = savedData.dospem2 || "Belum diisi";
+      document.getElementById("targetValue").textContent = savedData.targetLulus || "Belum diisi";
+    }
+
+    // ===== COUNTDOWN MENUJU TARGET LULUS =====
+    let countdownInterval; // global variable untuk interval countdown
+
+    function startCountdown() {
+      // stop interval lama kalau ada
+      if (countdownInterval) clearInterval(countdownInterval);
+
+      const targetValue = JSON.parse(localStorage.getItem("profileSkripsi"))?.targetLulus;
+      if (!targetValue) return; // kalau belum ada tanggal target
+
+      const countdownElements = {
+        hari: document.querySelector("#detailSection div.grid div:nth-child(1) p.text-lg"),
+        jam: document.querySelector("#detailSection div.grid div:nth-child(2) p.text-lg"),
+        menit: document.querySelector("#detailSection div.grid div:nth-child(3) p.text-lg"),
+        detik: document.querySelector("#detailSection div.grid div:nth-child(4) p.text-lg"),
+      };
+
+      function updateCountdown() {
+        const now = new Date();
+        const targetDate = new Date(targetValue);
+        const diff = targetDate - now;
+
+        if (diff <= 0) {
+          countdownElements.hari.textContent = "00";
+          countdownElements.jam.textContent = "00";
+          countdownElements.menit.textContent = "00";
+          countdownElements.detik.textContent = "00";
+          clearInterval(countdownInterval);
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        countdownElements.hari.textContent = String(days).padStart(2, "0");
+        countdownElements.jam.textContent = String(hours).padStart(2, "0");
+        countdownElements.menit.textContent = String(minutes).padStart(2, "0");
+        countdownElements.detik.textContent = String(seconds).padStart(2, "0");
+      }
+
+      updateCountdown(); // jalankan langsung
+      countdownInterval = setInterval(updateCountdown, 1000); // update tiap detik
+    }
+
+    // Simpan data profil
+    profileForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const profileData = {
+        nama: document.getElementById("inputNama").value,
+        prodi: document.getElementById("inputProdi").value,
+        nim: document.getElementById("inputNim").value,
+        universitas: document.getElementById("inputUniversitas").value,
+        judul: document.getElementById("inputJudul").value,
+        dospem1: document.getElementById("inputDospem1").value,
+        dospem2: document.getElementById("inputDospem2").value,
+        targetLulus: document.getElementById("inputTarget").value
+      };
+
+      localStorage.setItem("profileSkripsi", JSON.stringify(profileData));
+
+      // Update DOM
+      loadProfile();
+
+      // Restart countdown dengan target baru
+      startCountdown();
+
+      closeProfileModalFunction();
+    });
+
+    // Panggil saat halaman siap
+    window.addEventListener("DOMContentLoaded", () => {
+      loadProfile();
+      startCountdown();
+    });
+
+  </script>
+
+  <script src="js/theme.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/bimbingan.js"></script>
+  
+  <script src="https://mayarembed.r2.mayar.id/mayar-new-min.js"></script>
+</body>
+</html>

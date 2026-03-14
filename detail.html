@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detail Bimbingan</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
+</head>
+
+<body class="bg-gradient-to-br from-teal-50 via-white to-teal-100 dark:bg-none dark:bg-gray-900 min-h-screen flex items-center justify-center p-4">
+
+  <!-- APP CONTAINER -->
+  <div class="w-full max-w-md md:max-w-2xl lg:max-w-3xl 
+              bg-white dark:bg-gray-800 md:rounded-3xl 
+              md:shadow-2xl 
+              md:h-[90vh] h-screen 
+              flex flex-col overflow-hidden">
+
+    <!-- 🔹 STICKY TOP SECTION -->
+    <div class="sticky top-0 z-20 bg-white dark:bg-gray-800 backdrop-blur-md  border-b border-gray-200 dark:border-gray-700 shadow-sm">
+
+    <!-- HEADER -->
+    <div class="bg-gradient-to-r from-teal-500 to-emerald-500 
+                text-white p-4 
+                md:rounded-t-3xl shadow-sm relative">
+
+      <!-- Back Button -->
+      <button onclick="goBack()" 
+        class="absolute left-4 top-5 text-lg hover:scale-110 transition">
+        <i class="fi fi-br-arrow-small-left"></i>
+      </button>
+
+      <!-- Dark Mode Toggle -->
+      <button id="themeToggle"
+        class="absolute right-4 top-4 
+              bg-white/20 backdrop-blur-md 
+              p-2 rounded-full text-lg 
+              hover:scale-110 transition">
+        <i class="fi fi-br-moon-stars text-white dark:text-white"></i>
+      </button>
+
+      <h1 class="text-lg md:text-xl font-semibold text-center">
+        Detail Bimbingan
+      </h1>
+    </div>
+
+      <!-- INFO CARD -->
+      <div class="p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-5 hover:shadow-lg transition">
+
+        <h2 id="detailTopik"
+          class="font-semibold text-gray-800 dark:text-white text-base md:text-lg mb-3">
+        </h2>
+
+          <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+            <p id="detailDosen"></p>
+            <p id="detailTanggal"></p>
+          </div>
+
+          <span id="statusBadge"
+            class="inline-block mt-4 text-xs bg-green-100 text-green-600 px-3 py-1 rounded-full font-medium">
+            Selesai
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔹 CATATAN SECTION -->
+    <div class="flex-1 p-4 flex flex-col overflow-hidden">
+
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="font-semibold text-gray-700 dark:text-gray-200 text-sm md:text-base">
+          Catatan Revisi
+        </h3>
+
+        <button onclick="tambahCatatan()"
+          class="text-sm bg-teal-100 text-teal-700 px-4 py-1.5 rounded-full 
+                 hover:bg-teal-200 transition shadow-sm">
+          + Tambah
+        </button>
+      </div>
+
+      <div class="flex-1 bg-gray-50 dark:bg-gray-800 rounded-2xl p-4 overflow-y-auto border border-gray-200 dark:border-gray-700">
+
+        <div id="catatanList" class="space-y-3"></div>
+
+        <p id="emptyState"
+          class="text-sm text-gray-400 dark:text-gray-500 text-center mt-6 hidden">
+          Belum ada catatan
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- 🔹 ACTION BUTTONS -->
+    <div class="p-4 space-y-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+
+      <button onclick="toggleStatus()"
+        class="w-full bg-gradient-to-r from-teal-500 to-emerald-500 
+               text-white py-3 rounded-xl shadow-md 
+               hover:scale-[1.02] active:scale-[0.98] 
+               transition font-medium">
+        <i class="fi fi-br-check"></i>  Tandai Selesai
+      </button>
+
+      <button onclick="hapusSemua()"
+        class="w-full bg-red-500 text-white py-3 rounded-xl shadow-md 
+               hover:bg-red-600 
+               hover:scale-[1.02] active:scale-[0.98] 
+               transition font-medium">
+        <i class="fi fi-br-trash-xmark"></i> Hapus Semua Catatan
+      </button>
+
+    </div>
+
+  </div>
+
+    <!-- 🔹 MODAL TAMBAH CATATAN -->
+  <div id="modalTambah"
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-[999]">
+
+    <div class="bg-white dark:bg-gray-800 w-[90%] max-w-sm rounded-2xl shadow-xl p-5 relative">
+
+      <!-- Close Button -->
+      <button onclick="closeModal()"
+        class="absolute top-3 right-4 text-gray-400 hover:text-gray-600 text-lg">
+        <i class="fi fi-br-cross"></i>
+      </button>
+
+      <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">
+        Tambah Catatan
+      </h2>
+
+      <input
+        id="inputCatatan"
+        type="text"
+        placeholder="Tulis catatan..."
+        class="w-full dark:bg-gray-700 dark:text-white dark:border-gray-600 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-300"
+      />
+
+      <button onclick="simpanCatatan()"
+        class="w-full mt-4 bg-teal-500 text-white py-2 rounded-xl hover:bg-teal-600 transition">
+        Simpan
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- 🔹 CSS -->
+  <style>
+    @keyframes scaleIn {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    .animate-scaleIn {
+      animation: scaleIn 0.15s ease-out;
+    }
+    </style>
+
+  <!-- 🔹 JAVASCRIPT -->
+<script>
+  // 🔹 THEME
+    //Toggle Button Dark Mode
+    const toggleBtn = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      html.classList.add('dark');
+      toggleBtn.innerHTML = '<i class="fi fi-br-brightness text-gray-600 dark:text-white"></i>';
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      html.classList.toggle('dark');
+
+      if (html.classList.contains('dark')) {
+        localStorage.setItem('theme', 'dark');
+        toggleBtn.innerHTML = '<i class="fi fi-br-brightness text-gray-600 dark:text-white"></i>';
+      } else {
+        localStorage.setItem('theme', 'light');
+        toggleBtn.innerHTML = '<i class="fi fi-br-moon-stars text-white dark:text-white"></i>';
+      }
+    });
+
+  // 🔹 DATA
+  let catatan = [];
+
+  // 🔹 STATE MODAL
+  let modeCatatan = "tambah";
+  let indexEdit = null;
+
+  const catatanList = document.getElementById("catatanList");
+  const emptyState = document.getElementById("emptyState");
+  const statusBadge = document.getElementById("statusBadge");
+
+  // 🔹 RENDER
+  function renderCatatan() {
+    catatanList.innerHTML = "";
+
+    if (catatan.length === 0) {
+      emptyState.classList.remove("hidden");
+      return;
+    }
+
+    emptyState.classList.add("hidden");
+
+    catatan.forEach((item, index) => {
+      const div = document.createElement("div");
+
+      div.className =
+      "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-3 flex justify-between items-center hover:shadow-md transition";
+
+      div.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+          <span class="text-sm text-gray-700 dark:text-gray-200">${item}</span>
+        </div>
+        <div class="flex gap-3 text-sm">
+          <button onclick="editCatatan(${index})"
+            class="text-blue-500 hover:scale-110 transition"><i class="fi fi-br-pencil text-gray-600 dark:text-white"></i></button>
+          <button onclick="hapusCatatan(${index})"
+            class="text-red-500 hover:scale-110 transition"><i class="fi fi-br-trash-xmark"></i></button>
+        </div>
+      `;
+
+      catatanList.appendChild(div);
+    });
+  }
+
+  // 🔹 BUKA MODAL TAMBAH
+  function tambahCatatan() {
+    modeCatatan = "tambah";
+    indexEdit = null;
+
+    document.getElementById("modalTambah").classList.remove("hidden");
+    document.getElementById("modalTambah").classList.add("flex");
+
+    document.getElementById("inputCatatan").value = "";
+    document.querySelector("#modalTambah h2").innerText = "Tambah Catatan";
+
+    document.getElementById("inputCatatan").focus();
+  }
+
+  // 🔹 BUKA MODAL EDIT
+  function editCatatan(index) {
+    modeCatatan = "edit";
+    indexEdit = index;
+
+    document.getElementById("modalTambah").classList.remove("hidden");
+    document.getElementById("modalTambah").classList.add("flex");
+
+    document.getElementById("inputCatatan").value = catatan[index];
+    document.querySelector("#modalTambah h2").innerText = "Edit Catatan";
+
+    document.getElementById("inputCatatan").focus();
+  }
+
+  // 🔹 SIMPAN (TAMBAH / EDIT)
+  function simpanCatatan() {
+    const input = document.getElementById("inputCatatan").value.trim();
+    if (!input) return;
+
+    if (modeCatatan === "tambah") {
+      catatan.push(input);
+    } else if (modeCatatan === "edit") {
+      catatan[indexEdit] = input;
+    }
+
+    saveCatatan(); // ⬅ penting
+    renderCatatan();
+    closeModal();
+  }
+
+  // 🔹 HAPUS
+  function hapusCatatan(index) {
+    if (confirm("Yakin ingin menghapus?")) {
+      catatan.splice(index, 1);
+      saveCatatan();
+      renderCatatan();
+    }
+  }
+
+  function hapusSemua() {
+    if (confirm("Hapus semua catatan?")) {
+      catatan = [];
+      saveCatatan();
+      renderCatatan();
+    }
+  }
+
+  // 🔹 CLOSE MODAL
+  function closeModal() {
+    document.getElementById("modalTambah").classList.add("hidden");
+    document.getElementById("modalTambah").classList.remove("flex");
+
+    document.getElementById("inputCatatan").value = "";
+    modeCatatan = "tambah";
+    indexEdit = null;
+  }
+
+  // 🔹 STATUS
+  function toggleStatus() {
+  const id = getIdFromUrl();
+  const data = JSON.parse(localStorage.getItem("bimbingan")) || [];
+  const index = data.findIndex(i => i.id === id);
+
+  if (index === -1) return;
+
+  if (data[index].status === "Selesai") {
+    data[index].status = "Belum";
+  } else {
+    data[index].status = "Selesai";
+  }
+
+  localStorage.setItem("bimbingan", JSON.stringify(data));
+
+  loadDetail(); // refresh UI badge
+}
+
+  function goBack() {
+    window.location.href = "index.html";
+  }
+
+  // 🔹 PARSING ID
+// ===============================
+// AMBIL ID DARI URL
+// ===============================
+function getIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return Number(params.get("id"));
+}
+
+// ===============================
+// AMBIL DATA DARI LOCAL STORAGE
+// ===============================
+function loadDetail() {
+  const id = getIdFromUrl();
+
+  if (!id) {
+    alert("ID tidak ditemukan di URL");
+    return;
+  }
+
+  const data = JSON.parse(localStorage.getItem("bimbingan")) || [];
+  const item = data.find(i => i.id === id);
+
+  if (!item) {
+    alert("Data tidak ditemukan");
+    return;
+  }
+
+  // Render ke UI
+  document.getElementById("detailTopik").textContent = item.topik;
+  document.getElementById("detailDosen").innerHTML = "<i class='fi fi-br-chalkboard-user text-gray-600 dark:text-gray-400'></i> " + item.dosen;
+  document.getElementById("detailTanggal").innerHTML = "<i class='fi fi-br-calendar-days text-gray-600 dark:text-gray-400'></i> " + item.tanggal;
+
+  const statusBadge = document.getElementById("statusBadge");
+
+  if (item.status === "Selesai") {
+    statusBadge.textContent = "Selesai";
+    statusBadge.className =
+      "inline-block mt-4 text-xs bg-green-100 text-green-600 px-3 py-1 rounded-full font-medium";
+  } else {
+    statusBadge.textContent = "Belum";
+    statusBadge.className =
+      "inline-block mt-4 text-xs bg-orange-100 text-orange-600 px-3 py-1 rounded-full";
+  }
+}
+
+loadDetail();
+function loadCatatan() {
+  const id = getIdFromUrl();
+  if (!id) return;
+
+  const savedCatatan = JSON.parse(localStorage.getItem("catatan_" + id));
+
+  if (savedCatatan) {
+    catatan = savedCatatan;
+  } else {
+    catatan = [];
+  }
+
+  renderCatatan();
+}
+  loadCatatan();
+
+// ===============================
+// SIMPAN CATATAN KE LOCAL STORAGE
+// ===============================
+function saveCatatan() {
+  const id = getIdFromUrl();
+  localStorage.setItem("catatan_" + id, JSON.stringify(catatan));
+}
+
+</script>
+  <script src="js/theme.js"></script>
+</body>
+</html>
